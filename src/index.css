@@ -9,5 +9,7 @@
 @theme {
   --color-brand: #008ecc;
   --color-primary: #666666;
+  --color-secodary: #f5f5f5;
+  --color-third: #f3f9fb;
   --color-themey: #fff;
 }
