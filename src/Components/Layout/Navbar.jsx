@@ -1,38 +1,154 @@
-import React, { Children } from "react";
+import React, { Children, useState } from "react";
 import { Link } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { FaBars, FaRegUser } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
-import { BiChevronDown } from "react-icons/bi";
+import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 
 const Navbar = () => {
+  const [open, setOpen] = useState("");
   const categories = [
+    //  ["Iphone", "Samsung", "One Plus", "Pixel", "Nothing Phone"]
     {
       title: "Phone",
       to: "",
-      children: ["Iphone", "Samsung", "One Plus", "Pixel", "Nothing Phone"],
+      children: [
+        {
+          title: "Iphone",
+          to: "",
+        },
+        {
+          title: "Samsung",
+          to: "",
+        },
+        {
+          title: "One Plus",
+          to: "",
+        },
+        {
+          title: "Pixel",
+          to: "",
+        },
+        {
+          title: "Nothing Phone",
+          to: "",
+        },
+      ],
     },
     {
+      // ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Fitbit"]
       title: "Watch",
       to: "",
-      children: ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Fitbit"],
+      children: [
+        {
+          title: "Apple",
+          to: "",
+        },
+        {
+          title: "Samsung",
+          to: "",
+        },
+        {
+          title: "One Plus",
+          to: "",
+        },
+        {
+          title: "Google",
+          to: "",
+        },
+        {
+          title: "Xiaomi",
+          to: "",
+        },
+        {
+          title: "Fitbit",
+          to: "",
+        },
+      ],
     },
     {
+      // ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Oramio"]
       title: "TWS",
       to: "",
-      children: ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Oramio"],
+      children: [
+        {
+          title: "Apple",
+          to: "",
+        },
+        {
+          title: "Samsung",
+          to: "",
+        },
+        {
+          title: "One Plus",
+          to: "",
+        },
+        {
+          title: "Google",
+          to: "",
+        },
+        {
+          title: "Xiaomi",
+          to: "",
+        },
+        {
+          title: "Oramio",
+          to: "",
+        },
+      ],
     },
     {
+      // ["Macbook", "Samsung", "Asus", "Lenevo", "Hp", "Dell", "MSI"]
       title: "Laptop",
       to: "",
-      children: ["Macbook", "Samsung", "Asus", "Lenevo", "Hp", "Dell", "MSI"],
+      children: [
+        {
+          title: "Macbook",
+          to: "",
+        },
+        {
+          title: "Samsung",
+          to: "",
+        },
+        {
+          title: "Asus",
+          to: "",
+        },
+        {
+          title: "Lenevo",
+          to: "",
+        },
+        {
+          title: "Hp",
+          to: "",
+        },
+        {
+          title: "Dell",
+          to: "",
+        },
+        {
+          title: "MSI",
+          to: "",
+        },
+      ],
     },
     {
+      //  ["Deep Cool LS520", "Crossair"]
       title: "Cooler",
       to: "",
-      children: ["Deep Cool LS520", "Crossair"],
+      children: [
+        {
+          title: "Deep Cool LS520",
+          to: "",
+        },
+        {
+          title: "Crossair",
+          to: "",
+        },
+      ],
     },
   ];
+
   return (
     <header>
       <nav className="py-5">
@@ -96,9 +212,12 @@ const Navbar = () => {
               </Link>
               <ul className=" absolute top-full left-0 invisible opacity-0 group-hover:visible group-hover:opacity-100 w-48 p-2 transition rounded-2xl space-y-2 text-base text-primary font-medium bg-themey shadow">
                 {item.children.map((child) => (
-                  <li key={child}>
-                    <Link className=" p-2  rounded-2xl hover:bg-brand hover:text-white block">
-                      {child}
+                  <li key={child.title}>
+                    <Link
+                      to={child.to}
+                      className=" p-2  rounded-2xl hover:bg-brand hover:text-white block"
+                    >
+                      {child.title}
                     </Link>
                   </li>
                 ))}
@@ -108,6 +227,46 @@ const Navbar = () => {
         </div>
       </div>
       {/* Products category Ended */}
+
+      {/* MOBILE NAVBAR START */}
+
+      <div className="fixed top-0 left-0 bg-primary/30 w-full h-screen">
+        <div className="bg-themey overflow-y-auto w-4/5 sm:w-3/5 h-full p-4">
+          <ul className=" space-y-4 text-primary font-bold text-base mb-5 pb-4 border-secodary border-b">
+            {categories.map((items) => (
+              <li key={items.title}>
+                <div className="flex justify-between">
+                  <Link to={items.to}>{items.title}</Link>
+                  <button
+                    className="text-3xl"
+                    onClick={() => setOpen(items.title)}
+                  >
+                    <BiChevronRight />
+                  </button>
+                </div>
+
+                <ul
+                  className={` ${open === items.title ? "block" : "hidden"}   font-semibold pl-2 space-y-2 mt-2 text-base`}
+                >
+                  {items.children.map((child) => (
+                    <li key={child.title}>
+                      <Link>{child.title}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+          <Link
+            to="/signin"
+            className=" md:flex text-base items-center font-bold gap-1.5 text-primary "
+          >
+            Sign Up/ Sign in
+          </Link>
+        </div>
+      </div>
+
+      {/* MOBILE NAVBAR END */}
     </header>
   );
 };
