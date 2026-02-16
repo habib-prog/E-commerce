@@ -203,7 +203,7 @@ const Navbar = () => {
         {/* Mobile search end */}
       </nav>
       {/* Products category Started */}
-      <div className="p-4 border-third border-y hidden md:block ">
+      <div className="p-4 border-third border-y hidden z-40 md:block ">
         <div className=" container flex gap-2">
           {categories.map((item) => (
             <div key={item.title} className="relative group">
@@ -251,7 +251,7 @@ const Navbar = () => {
               <IoIosCloseCircle />
             </button>
           </div>
-          <ul className=" space-y-4 text-primary font-bold text-base mb-5 pb-4 border-secodary border-b">
+          <ul className=" space-y-4 text-primary z-50 font-bold text-base mb-5 pb-4 border-secodary border-b">
             {categories.map((items) => (
               <li key={items.title}>
                 <div className="flex justify-between">

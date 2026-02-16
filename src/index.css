@@ -13,3 +13,40 @@
   --color-third: #f3f9fb;
   --color-themey: #fff;
 }
+
+.slick-dots {
+  bottom: 25px !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+
+.slick-dots li {
+  margin: 0 5px;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li button {
+  width: 10px !important;
+  height: 10px !important;
+  background: #cbd5e1 !important;
+  border-radius: 50% !important;
+  content: "" !important;
+  padding: 0 !important;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li button:before {
+  display: none !important;
+}
+
+.slick-dots li.slick-active {
+  width: 30px !important;
+}
+
+.slick-dots li.slick-active button {
+  width: 100% !important;
+  background: white !important;
+  border-radius: 10px !important;
+}
