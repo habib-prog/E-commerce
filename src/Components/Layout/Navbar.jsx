@@ -203,7 +203,7 @@ const Navbar = () => {
         {/* Mobile search end */}
       </nav>
       {/* Products category Started */}
-      <div className="p-4 border-third border-y relative hidden z-50 md:block ">
+      <div className="p-4 border-third border-y  relative hidden z-50 md:block ">
         <div className=" container flex gap-2">
           {categories.map((item) => (
             <div key={item.title} className="relative group">
@@ -280,9 +280,9 @@ const Navbar = () => {
           </ul>
           <Link
             to="/signin"
-            className=" md:flex text-base items-center font-bold gap-1.5 text-primary "
+            className=" md:flex text-base items-center font-primary gap-1.5 text-primary "
           >
-            Sign Up/ Sign in
+            Sign Up / Sign in
           </Link>
         </div>
       </div>

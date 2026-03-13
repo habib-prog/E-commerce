@@ -5,8 +5,13 @@ import Nav from "./Navbar";
 const Layout = () => {
   return (
     <>
-      <Nav />
-      <Outlet />
+      <div className="fixed z-50 w-full bg-white">
+        <Nav />
+      </div>
+
+      <div className="pt-36">
+        <Outlet />
+      </div>
     </>
   );
 };
