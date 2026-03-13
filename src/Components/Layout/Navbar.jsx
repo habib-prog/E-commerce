@@ -203,7 +203,7 @@ const Navbar = () => {
         {/* Mobile search end */}
       </nav>
       {/* Products category Started */}
-      <div className="p-4 border-third border-y hidden z-40 md:block ">
+      <div className="p-4 border-third border-y relative hidden z-50 md:block ">
         <div className=" container flex gap-2">
           {categories.map((item) => (
             <div key={item.title} className="relative group">

@@ -8,7 +8,7 @@ import { BiChevronRight, BiChevronLeft } from "react-icons/bi";
 function SampleNextArrow({ onClick }) {
   return (
     <div
-      className={` sm:w-15 sm:h-15 bg-slate-100 p-1.25 rounded-full cursor-pointer absolute top-1/2  -translate-y-1/2   -right-5 z-10`}
+      className={` sm:w-15 sm:h-15 bg-slate-100 p-1.25 rounded-full cursor-pointer absolute top-1/2  -translate-y-1/2   -right-4 sm:-right-7 z-10`}
       onClick={onClick}
     >
       <BiChevronRight className="sm:w-12.5 sm:h-12.5 bg-blue-100 rounded-full text-blue-400" />
@@ -19,7 +19,7 @@ function SampleNextArrow({ onClick }) {
 function SamplePrevArrow({ onClick }) {
   return (
     <div
-      className={` sm:w-15 sm:h-15 bg-slate-100 p-1.25 rounded-full cursor-pointer absolute top-1/2  -translate-y-1/2   -left-6 z-10`}
+      className={` sm:w-15 sm:h-15 bg-slate-100 p-1.25 rounded-full cursor-pointer absolute top-1/2  -translate-y-1/2   -left-4 sm:-left-7 z-10`}
       onClick={onClick}
     >
       <BiChevronLeft className="sm:w-12.5 sm:h-12.5 bg-blue-100 rounded-full text-blue-400" />
