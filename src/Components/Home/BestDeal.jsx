@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 const BestDeal = () => {
   return (
-    <section className="sm:py-32 py-14 ">
+    <section className="sm:py-18 py-14 ">
       {/* Heading start */}
       <div className="container flex justify-between">
         <h1 className="heading">

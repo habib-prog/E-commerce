@@ -38,6 +38,7 @@ const Banner = () => {
     autoplay: true,
     autoplaySpeed: 1500,
     cssEase: "linear",
+
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
@@ -46,13 +47,19 @@ const Banner = () => {
       <div className="container">
         <Slider {...settings}>
           <div>
+            <img className="rounded-2xl " src="/star.png" alt="Banner" />
+          </div>
+          <div>
+            <img className="rounded-2xl" src="/Eid.png" alt="Banner" />
+          </div>
+          <div>
+            <img className="rounded-2xl" src="/eid2.png" alt="Banner" />
+          </div>
+          <div>
             <img className="rounded-2xl" src="/watch.png" alt="Banner" />
           </div>
           <div>
-            <img className="rounded-2xl" src="/mac.png" alt="Banner" />
-          </div>
-          <div>
-            <img className="rounded-2xl" src="/iphone.png" alt="Banner" />
+            <img className="rounded-2xl" src="/air.png" alt="Banner" />
           </div>
         </Slider>
       </div>
