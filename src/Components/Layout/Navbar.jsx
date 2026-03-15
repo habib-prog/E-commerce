@@ -162,7 +162,7 @@ const Navbar = () => {
             <img className="w-full" src="/logo.png" alt="logo" />
           </Link>
           {/* Desktop Navigation Bar Started */}
-          <div className="search hidden sm:flex items-center p-2 gap-2  rounded-lg bg-[#F3F9FB] w-full max-w-126.75">
+          <div className="search hidden sm:flex items-center p-2 gap-2  rounded-lg bg-[#F3F9FB] w-full sm:ml-22   max-w-126.75">
             <CiSearch />
             <input
               className="outline-none flex-1  "
@@ -171,17 +171,19 @@ const Navbar = () => {
             />
           </div>
           {/* Desktop Navigation Bar Ended */}
-          <div className="auth flex items-center gap-10">
+          <div className="auth md:ml-12 flex items-center gap-10">
             <Link
               to="/signin"
-              className=" hidden md:flex text-base items-center font-bold gap-1.5 text-primary relative after:absolute after:h-full after:w-0.5 after:bg-primary after:top-0 after:-right-5"
+              className=" hidden md:flex   text-base items-center font-bold gap-1.5 text-primary relative after:absolute after:h-full after:w-0.5 after:bg-primary after:top-0 after:-right-5"
             >
-              <FaRegUser className="text-brand text-2xl" />
-              Sign Up/ Sign in
+              <FaRegUser className="text-brand text-xl" />
+              <span className="max-[1024px]:hidden inline">
+                Sign IN / Sign Up
+              </span>
             </Link>
             <Link
               to="cart"
-              className="flex text-base items-center text-primary font-bold gap-1.5"
+              className="flex md:mr-5 text-base items-center text-primary font-bold gap-1.5"
             >
               <IoCartOutline className="text-brand  text-2xl" />
               <span className="hidden sm:block"> Cart</span>
