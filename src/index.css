@@ -88,3 +88,13 @@ body {
     @apply font-bold sm:text-2xl  text-sm text-brand;
   }
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
