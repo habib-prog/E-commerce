@@ -9,7 +9,7 @@ const ProductCard = ({
   save,
 }) => {
   return (
-    <div className="rounded-2xl overflow-hidden  border border-primary/20 max-w-56">
+    <div className="rounded-2xl hover:shadow-xl transition-all duration-500 ease-linear overflow-hidden  border border-primary/20 max-w-56">
       <div className="bg-slate-100 flex items-center h-48 justify-center py-4 ">
         <img src={image} alt={altText} className="w-auto max-w-full" />
       </div>
