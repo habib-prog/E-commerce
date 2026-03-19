@@ -16,8 +16,8 @@ function MultipleItems() {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToShow: 1,
+          slidesToScroll: 1,
         },
       },
       {
@@ -25,32 +25,31 @@ function MultipleItems() {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          centerMode: true,
-          centerPadding: "20px",
+          centerMode: false,
         },
       },
     ],
   };
   return (
-    <div className="slider-container container electronics-slider">
+    <div className=" container electronics-slider">
       <Slider {...settings}>
-        <div className="px-3">
+        <div className="sm:px-3">
           <img src="/air.png" alt="" />
         </div>
-        <div className="px-3">
+        <div className="sm:px-3">
           <img src="/eid2.png" alt="" />
         </div>
-        <div className="px-3">
+        <div className="sm:px-3">
           <img src="/star.png" alt="" />
         </div>
-        <div className="px-3">
+        <div className="sm:px-3">
           <img src="/air.png" alt="" />
         </div>
-        <div className="px-3">
+        <div className="sm:px-3">
           <img src="/eid2.png" alt="" />
         </div>
-        <div className="px-3">
-          <img src="/star.png" alt="" />
+        <div className="sm:px-3">
+          <img src="/star.png" className="w-full h-auto" alt="" />
         </div>
       </Slider>
     </div>
