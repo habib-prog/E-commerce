@@ -43,9 +43,9 @@ const Banner = () => {
     prevArrow: <SamplePrevArrow />,
   };
   return (
-    <section className="container mt-7 inline relative group:">
-      <div className="container">
-        <Slider {...settings}>
+    <section className="container  inline relative group:">
+      <div className=" container hero-slider">
+        <Slider className="mt-0 md:mt-15 lg:mt-0" {...settings}>
           <div>
             <img className="rounded-2xl " src="/star.png" alt="Banner" />
           </div>

@@ -19,11 +19,12 @@ const BestDeal = () => {
                   md:grid-flow-row md:grid-cols-[repeat(auto-fill,227px)] md:justify-center no-scrollbar"
         >
           <ProductCard
-            image={"/Mobile.png"}
-            title={"Galaxy S22 Ultra"}
-            currentPrice={"₹32999"}
-            OldPrice={"₹74999"}
-            save={"Save - ₹32999"}
+            image={"/air.jpeg"}
+            title={"Iphone Air"}
+            currentPrice={"₹1,20,999"}
+            OldPrice={"₹2,00,999"}
+            save={"Save - ₹80,000"}
+            btntext={"Add Cart"}
           />
           <ProductCard
             image={"/Mobile.png"}
@@ -31,6 +32,7 @@ const BestDeal = () => {
             currentPrice={"₹32999"}
             OldPrice={"₹74999"}
             save={"Save - ₹32999"}
+            btntext={"Add Cart"}
           />
           <ProductCard
             image={"/image 3.png"}
@@ -38,6 +40,7 @@ const BestDeal = () => {
             currentPrice={"₹32999"}
             OldPrice={"₹74999"}
             save={"Save - ₹32999"}
+            btntext={"Add Cart"}
           />
           <ProductCard
             image={"/iphone.png"}
@@ -45,6 +48,7 @@ const BestDeal = () => {
             currentPrice={"₹10,2999"}
             OldPrice={"₹10,3999"}
             save={"Save - ₹10000"}
+            btntext={"Add Cart"}
           />
           <ProductCard
             image={"/Mobile.png"}
@@ -52,6 +56,7 @@ const BestDeal = () => {
             currentPrice={"₹32999"}
             OldPrice={"₹74999"}
             save={"Save - ₹32999"}
+            btntext={"Add Cart"}
           />
         </div>
         <p className="text-brand text-center sm:hidden">Swip to view</p>

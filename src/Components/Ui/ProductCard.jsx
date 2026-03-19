@@ -7,6 +7,7 @@ const ProductCard = ({
   OldPrice,
   title,
   save,
+  btntext,
 }) => {
   return (
     <div className="rounded-2xl hover:shadow-xl transition-all duration-500 ease-linear overflow-hidden  border border-primary/20 max-w-56">
@@ -19,8 +20,11 @@ const ProductCard = ({
           {currentPrice} <span className="line-through">{OldPrice}</span>
         </p>
       </div>
-      <div className="p-2.5">
+      <div className="p-2.5 flex gap-1.5 items-center justify-between">
         <p className="text-green-400">{save}</p>
+        <button className="bg-brand text-white p-1.5 rounded-md text-sm cursor-pointer">
+          {btntext}
+        </button>
       </div>
     </div>
   );

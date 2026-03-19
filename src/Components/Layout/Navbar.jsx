@@ -153,6 +153,16 @@ const Navbar = () => {
 
   return (
     <header>
+      {/* <div className="bg-slate-50 w-full px-2 py-2 fixed sm:block lg:hidden hidden ">
+        <div className="wraper  flex justify-between container text-primary">
+          <div>
+            <p>Welcome to worldwide Megamart!</p>
+          </div>
+          <div>
+            <p>Arriving Soon!</p>
+          </div>
+        </div>
+      </div> */}
       <nav className="py-5">
         <div className="container flex justify-between items-center ">
           <button onClick={() => setSidebarOpen(true)} className="sm:hidden">
@@ -205,7 +215,7 @@ const Navbar = () => {
         {/* Mobile search end */}
       </nav>
       {/* Products category Started */}
-      <div className="p-4 border-third border-y  relative hidden z-50 md:block ">
+      <div className="p-4 border-third border-y   relative hidden z-50 md:block ">
         <div className=" container flex gap-2">
           {categories.map((item) => (
             <div key={item.title} className="relative group">
