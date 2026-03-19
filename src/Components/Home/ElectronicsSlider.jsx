@@ -33,22 +33,22 @@ function MultipleItems() {
   return (
     <div className=" container electronics-slider">
       <Slider {...settings}>
-        <div className="sm:px-3">
+        <div className="sm:px-3 px-1">
           <img src="/air.png" alt="" />
         </div>
-        <div className="sm:px-3">
+        <div className="sm:px-3 px-1">
           <img src="/eid2.png" alt="" />
         </div>
-        <div className="sm:px-3">
+        <div className="sm:px-3 px-1">
           <img src="/star.png" alt="" />
         </div>
-        <div className="sm:px-3">
+        <div className="sm:px-3 px-1">
           <img src="/air.png" alt="" />
         </div>
-        <div className="sm:px-3">
+        <div className="sm:px-3 px-1">
           <img src="/eid2.png" alt="" />
         </div>
-        <div className="sm:px-3">
+        <div className="sm:px-3 px-1">
           <img src="/star.png" className="w-full h-auto" alt="" />
         </div>
       </Slider>
