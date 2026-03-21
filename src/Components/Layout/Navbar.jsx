@@ -8,7 +8,6 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { useGetProductsCategoryQuery } from "../../API/apiSlice";
 
 const Navbar = () => {
-  const [open, setOpen] = useState("");
   const [Sidebaropen, setSidebarOpen] = useState(false);
   // const categories = [
   //   //  ["Iphone", "Samsung", "One Plus", "Pixel", "Nothing Phone"]
@@ -174,7 +173,7 @@ const Navbar = () => {
           {/* Desktop Navigation Bar Ended */}
           <div className="auth md:ml-12 flex items-center gap-10">
             <Link
-              to="/signin"
+              to="/login"
               className=" hidden md:flex   text-base items-center font-bold gap-1.5 text-primary relative after:absolute after:h-full after:w-0.5 after:bg-primary after:top-0 after:-right-5"
             >
               <FaRegUser className="text-brand text-xl" />
@@ -234,38 +233,16 @@ const Navbar = () => {
           className="bg-themey overflow-y-auto w-4/5 sm:w-3/5 h-full p-4"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="  text-primary pb-3 border-b border-secodary flex justify-between">
+          <div className="  text-primary pb-3 top-0 p-2  border-b fixed bg-white  w-50 mb-12  border-secodary flex justify-between">
             <h5 className="text-xl text-primary">Menu Sidebar</h5>
             <button onClick={() => setSidebarOpen(false)} className="text-2xl">
               <IoIosCloseCircle />
             </button>
           </div>
-          <ul className=" space-y-4 text-primary z-50 font-bold text-base mb-5 pb-4 border-secodary border-b">
-            {/* {categories.map((items) => (
-              <li key={items.title}>
-                <div className="flex justify-between">
-                  <Link onClick={() => setOpen(items.title)} to={items.to}>
-                    {items.title}
-                  </Link>
-                  <button
-                    className="text-3xl cursor-pointer"
-                    onClick={() => setOpen(items.title)}
-                  >
-                    <BiChevronRight />
-                  </button>
-                </div>
-
-                <ul
-                  className={` ${open === items.title ? "block" : "hidden"}   font-semibold pl-2 space-y-2 mt-2 text-base`}
-                >
-                  {items.children.map((child) => (
-                    <li key={child.title}>
-                      <Link>{child.title}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))} */}
+          <ul className=" space-y-4 text-primary mt-12  z-50 font-bold text-base mb-5 pb-4 border-secodary border-b">
+            {Categorylist?.map((list, index) => (
+              <li key={index}>{list}</li>
+            ))}
           </ul>
           <Link
             to="/signin"
