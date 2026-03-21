@@ -5,164 +5,155 @@ import { FaBars, FaRegUser } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import { IoIosCloseCircle } from "react-icons/io";
+import { useGetProductsCategoryQuery } from "../../API/apiSlice";
 
 const Navbar = () => {
   const [open, setOpen] = useState("");
   const [Sidebaropen, setSidebarOpen] = useState(false);
-  const categories = [
-    //  ["Iphone", "Samsung", "One Plus", "Pixel", "Nothing Phone"]
-    {
-      title: "Phone",
-      to: "",
-      children: [
-        {
-          title: "Iphone",
-          to: "",
-        },
-        {
-          title: "Samsung",
-          to: "",
-        },
-        {
-          title: "One Plus",
-          to: "",
-        },
-        {
-          title: "Pixel",
-          to: "",
-        },
-        {
-          title: "Nothing Phone",
-          to: "",
-        },
-      ],
-    },
-    {
-      // ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Fitbit"]
-      title: "Watch",
-      to: "",
-      children: [
-        {
-          title: "Apple",
-          to: "",
-        },
-        {
-          title: "Samsung",
-          to: "",
-        },
-        {
-          title: "One Plus",
-          to: "",
-        },
-        {
-          title: "Google",
-          to: "",
-        },
-        {
-          title: "Xiaomi",
-          to: "",
-        },
-        {
-          title: "Fitbit",
-          to: "",
-        },
-      ],
-    },
-    {
-      // ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Oramio"]
-      title: "TWS",
-      to: "",
-      children: [
-        {
-          title: "Apple",
-          to: "",
-        },
-        {
-          title: "Samsung",
-          to: "",
-        },
-        {
-          title: "One Plus",
-          to: "",
-        },
-        {
-          title: "Google",
-          to: "",
-        },
-        {
-          title: "Xiaomi",
-          to: "",
-        },
-        {
-          title: "Oramio",
-          to: "",
-        },
-      ],
-    },
-    {
-      // ["Macbook", "Samsung", "Asus", "Lenevo", "Hp", "Dell", "MSI"]
-      title: "Laptop",
-      to: "",
-      children: [
-        {
-          title: "Macbook",
-          to: "",
-        },
-        {
-          title: "Samsung",
-          to: "",
-        },
-        {
-          title: "Asus",
-          to: "",
-        },
-        {
-          title: "Lenevo",
-          to: "",
-        },
-        {
-          title: "Hp",
-          to: "",
-        },
-        {
-          title: "Dell",
-          to: "",
-        },
-        {
-          title: "MSI",
-          to: "",
-        },
-      ],
-    },
-    {
-      //  ["Deep Cool LS520", "Crossair"]
-      title: "Cooler",
-      to: "",
-      children: [
-        {
-          title: "Deep Cool LS520",
-          to: "",
-        },
-        {
-          title: "Crossair",
-          to: "",
-        },
-      ],
-    },
-  ];
-
+  // const categories = [
+  //   //  ["Iphone", "Samsung", "One Plus", "Pixel", "Nothing Phone"]
+  //   {
+  //     title: "Phone",
+  //     to: "",
+  //     children: [
+  //       {
+  //         title: "Iphone",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Samsung",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "One Plus",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Pixel",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Nothing Phone",
+  //         to: "",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     // ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Fitbit"]
+  //     title: "Watch",
+  //     to: "",
+  //     children: [
+  //       {
+  //         title: "Apple",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Samsung",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "One Plus",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Google",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Xiaomi",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Fitbit",
+  //         to: "",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     // ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Oramio"]
+  //     title: "TWS",
+  //     to: "",
+  //     children: [
+  //       {
+  //         title: "Apple",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Samsung",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "One Plus",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Google",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Xiaomi",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Oramio",
+  //         to: "",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     // ["Macbook", "Samsung", "Asus", "Lenevo", "Hp", "Dell", "MSI"]
+  //     title: "Laptop",
+  //     to: "",
+  //     children: [
+  //       {
+  //         title: "Macbook",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Samsung",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Asus",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Lenevo",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Hp",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Dell",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "MSI",
+  //         to: "",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     //  ["Deep Cool LS520", "Crossair"]
+  //     title: "Cooler",
+  //     to: "",
+  //     children: [
+  //       {
+  //         title: "Deep Cool LS520",
+  //         to: "",
+  //       },
+  //       {
+  //         title: "Crossair",
+  //         to: "",
+  //       },
+  //     ],
+  //   },
+  // ];
+  const { data: Categorylist } = useGetProductsCategoryQuery();
   return (
     <header>
-      {/* <div className="bg-slate-50 w-full px-2 py-2 fixed sm:block lg:hidden hidden ">
-        <div className="wraper  flex justify-between container text-primary">
-          <div>
-            <p>Welcome to worldwide Megamart!</p>
-          </div>
-          <div>
-            <p>Arriving Soon!</p>
-          </div>
-        </div>
-      </div> */}
       <nav className="py-5">
         <div className="container flex justify-between items-center ">
           <button onClick={() => setSidebarOpen(true)} className="sm:hidden">
@@ -216,27 +207,13 @@ const Navbar = () => {
       </nav>
       {/* Products category Started */}
       <div className="p-4 border-third border-y   relative hidden z-50 md:block ">
-        <div className=" container flex gap-2">
-          {categories.map((item) => (
-            <div key={item.title} className="relative group">
-              <Link className="hover:bg-brand hover:text-white font-medium bg-third px-3 py-2  rounded-2xl inline-block ">
-                <div className="flex items-center gap-1">
-                  <p>{item.title}</p>
-                  <BiChevronDown className="text-2xl" />
-                </div>
-              </Link>
-              <ul className=" absolute top-full left-0 invisible opacity-0 group-hover:visible group-hover:opacity-100 w-48 p-2 transition rounded-2xl space-y-2 text-base text-primary font-medium bg-themey shadow">
-                {item.children.map((child) => (
-                  <li key={child.title}>
-                    <Link
-                      to={child.to}
-                      className=" p-2  rounded-2xl hover:bg-brand hover:text-white block"
-                    >
-                      {child.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+        <div className=" container flex gap-2  overflow-x-auto no-scrollbar">
+          {Categorylist?.map((items, index) => (
+            <div
+              className="bg-brand rounded-xl  text-white text-nowrap px-2 py-1 "
+              key={index}
+            >
+              {items}
             </div>
           ))}
         </div>
@@ -264,7 +241,7 @@ const Navbar = () => {
             </button>
           </div>
           <ul className=" space-y-4 text-primary z-50 font-bold text-base mb-5 pb-4 border-secodary border-b">
-            {categories.map((items) => (
+            {/* {categories.map((items) => (
               <li key={items.title}>
                 <div className="flex justify-between">
                   <Link onClick={() => setOpen(items.title)} to={items.to}>
@@ -288,7 +265,7 @@ const Navbar = () => {
                   ))}
                 </ul>
               </li>
-            ))}
+            ))} */}
           </ul>
           <Link
             to="/signin"
