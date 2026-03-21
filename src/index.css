@@ -51,9 +51,14 @@ body {
   width: 30px !important;
 }
 
-.slick-dots li.slick-active button {
+.hero-slider .slick-dots li.slick-active button {
   width: 100% !important;
   background: rgba(255, 255, 255, 0.86) !important;
+  border-radius: 10px !important;
+}
+.slick-dots li.slick-active button {
+  width: 100% !important;
+  background: var(--color-brand) !important;
   border-radius: 10px !important;
 }
 
