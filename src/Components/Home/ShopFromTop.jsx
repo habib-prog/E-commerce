@@ -21,7 +21,7 @@ const ShopFromTop = () => {
 
           <RoundedCards image={"/wh.png"} title={"Smart Watch"} />
         </div>
-        <p className="text-brand text-center text-sm mb-12 font-medium italic">
+        <p className="text-brand sm:hidden  text-center text-sm mb-12 font-medium italic">
           ← Swipe to view →
         </p>
       </div>
