@@ -245,7 +245,8 @@ const Navbar = () => {
             ))}
           </ul>
           <Link
-            to="/signin"
+            to="/login"
+            onClick={() => setSidebarOpen(false)}
             className=" md:flex text-base items-center font-primary gap-1.5 text-primary "
           >
             Sign Up / Sign in
