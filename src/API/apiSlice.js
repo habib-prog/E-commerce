@@ -8,7 +8,12 @@ export const myApi = createApi({
     getProductsCategory: builder.query({
       query: () => "category-list",
     }),
+    getProductsByCategory: builder.query({
+      query: ({ category, limit = 10, skip = 0 }) =>
+        `category/${category}?limit=${limit}&skip=${skip}`,
+    }),
   }),
 });
 
-export const { useGetProductsCategoryQuery } = myApi;
+export const { useGetProductsCategoryQuery, useGetProductsByCategoryQuery } =
+  myApi;

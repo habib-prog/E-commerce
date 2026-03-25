@@ -80,7 +80,7 @@ const Navbar = () => {
           {/* Left Arrow Button */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 z-10 bg-white shadow-lg p-1.5 rounded-full border border-gray-200 hover:bg-brand hover:text-white transition-all hidden sm:flex items-center justify-center"
+            className="absolute left-0 z-10 cursor-pointer bg-white shadow-lg p-1.5 rounded-full border border-gray-200 hover:bg-brand hover:text-white transition-all hidden sm:flex items-center justify-center"
           >
             <BiChevronLeft size={24} />
           </button>
@@ -88,22 +88,23 @@ const Navbar = () => {
           {/* Scrollable Category List */}
           <div
             ref={scrollRef}
-            className="flex gap-3 overflow-x-auto no-scrollbar select-none px-2 sm:px-10 scroll-smooth"
+            className="flex gap-1 overflow-x-auto no-scrollbar   sm:px-10 scroll-smooth"
           >
             {Categorylist?.map((items, index) => (
-              <div
+              <Link
+                to={`/category/${items}`}
                 className="bg-brand rounded-xl text-white text-nowrap px-4 py-1.5 text-sm font-medium uppercase cursor-pointer hover:brightness-110 transition-all"
                 key={index}
               >
                 {items}
-              </div>
+              </Link>
             ))}
           </div>
 
           {/* Right Arrow Button */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 z-10 bg-white shadow-lg p-1.5 rounded-full border border-gray-200 hover:bg-brand hover:text-white transition-all hidden sm:flex items-center justify-center"
+            className="absolute right-0 z-10 cursor-pointer bg-white shadow-lg p-1.5 rounded-full border border-gray-200 hover:bg-brand hover:text-white transition-all hidden sm:flex items-center justify-center"
           >
             <BiChevronRight size={24} />
           </button>
