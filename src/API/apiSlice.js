@@ -3,14 +3,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const myApi = createApi({
   reducerPath: "myApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://dummyjson.com/products/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://dummyjson.com/" }),
   endpoints: (builder) => ({
     getProductsCategory: builder.query({
-      query: () => "category-list",
+      query: () => "products/category-list",
     }),
     getProductsByCategory: builder.query({
       query: ({ category, limit = 10, skip = 0 }) =>
-        `category/${category}?limit=${limit}&skip=${skip}`,
+        `products/category/${category}?limit=${limit}&skip=${skip}`,
     }),
   }),
 });
