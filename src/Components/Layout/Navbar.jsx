@@ -1,155 +1,26 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { FaBars, FaRegUser } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
-import { BiChevronDown, BiChevronRight } from "react-icons/bi";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { IoIosCloseCircle } from "react-icons/io";
 import { useGetProductsCategoryQuery } from "../../API/apiSlice";
 
 const Navbar = () => {
   const [Sidebaropen, setSidebarOpen] = useState(false);
-  // const categories = [
-  //   //  ["Iphone", "Samsung", "One Plus", "Pixel", "Nothing Phone"]
-  //   {
-  //     title: "Phone",
-  //     to: "",
-  //     children: [
-  //       {
-  //         title: "Iphone",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Samsung",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "One Plus",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Pixel",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Nothing Phone",
-  //         to: "",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     // ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Fitbit"]
-  //     title: "Watch",
-  //     to: "",
-  //     children: [
-  //       {
-  //         title: "Apple",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Samsung",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "One Plus",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Google",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Xiaomi",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Fitbit",
-  //         to: "",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     // ["Apple", "Samsung", "One Plus", "Google", "Xiaomi", "Oramio"]
-  //     title: "TWS",
-  //     to: "",
-  //     children: [
-  //       {
-  //         title: "Apple",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Samsung",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "One Plus",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Google",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Xiaomi",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Oramio",
-  //         to: "",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     // ["Macbook", "Samsung", "Asus", "Lenevo", "Hp", "Dell", "MSI"]
-  //     title: "Laptop",
-  //     to: "",
-  //     children: [
-  //       {
-  //         title: "Macbook",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Samsung",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Asus",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Lenevo",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Hp",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Dell",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "MSI",
-  //         to: "",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     //  ["Deep Cool LS520", "Crossair"]
-  //     title: "Cooler",
-  //     to: "",
-  //     children: [
-  //       {
-  //         title: "Deep Cool LS520",
-  //         to: "",
-  //       },
-  //       {
-  //         title: "Crossair",
-  //         to: "",
-  //       },
-  //     ],
-  //   },
-  // ];
+  const scrollRef = useRef(null);
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount = 300;
+      if (direction === "left") {
+        current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      } else {
+        current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
+    }
+  };
   const { data: Categorylist } = useGetProductsCategoryQuery();
   return (
     <header>
@@ -204,20 +75,41 @@ const Navbar = () => {
         </div>
         {/* Mobile search end */}
       </nav>
-      {/* Products category Started */}
-      <div className="p-4 border-third border-y   relative  z-50  ">
-        <div className=" container flex gap-2  overflow-x-auto no-scrollbar">
-          {Categorylist?.map((items, index) => (
-            <div
-              className="bg-brand rounded-xl  text-white text-nowrap px-2 py-1 "
-              key={index}
-            >
-              {items}
-            </div>
-          ))}
+      <div className="p-4 border-third border-y relative z-40 group">
+        <div className="container relative flex items-center">
+          {/* Left Arrow Button */}
+          <button
+            onClick={() => scroll("left")}
+            className="absolute left-0 z-10 bg-white shadow-lg p-1.5 rounded-full border border-gray-200 hover:bg-brand hover:text-white transition-all hidden sm:flex items-center justify-center"
+          >
+            <BiChevronLeft size={24} />
+          </button>
+
+          {/* Scrollable Category List */}
+          <div
+            ref={scrollRef}
+            className="flex gap-3 overflow-x-auto no-scrollbar select-none px-2 sm:px-10 scroll-smooth"
+          >
+            {Categorylist?.map((items, index) => (
+              <div
+                className="bg-brand rounded-xl text-white text-nowrap px-4 py-1.5 text-sm font-medium uppercase cursor-pointer hover:brightness-110 transition-all"
+                key={index}
+              >
+                {items}
+              </div>
+            ))}
+          </div>
+
+          {/* Right Arrow Button */}
+          <button
+            onClick={() => scroll("right")}
+            className="absolute right-0 z-10 bg-white shadow-lg p-1.5 rounded-full border border-gray-200 hover:bg-brand hover:text-white transition-all hidden sm:flex items-center justify-center"
+          >
+            <BiChevronRight size={24} />
+          </button>
         </div>
       </div>
-      {/* Products category Ended */}
+      {/* --- Products Category Section EndeD --- */}
 
       {/* MOBILE NAVBAR START */}
 

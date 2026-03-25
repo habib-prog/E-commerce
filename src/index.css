@@ -122,7 +122,7 @@ body {
 
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
-    display: none;
+    color: none;
   }
   .no-scrollbar {
     -ms-overflow-style: none;
