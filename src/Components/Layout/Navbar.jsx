@@ -134,7 +134,11 @@ const Navbar = () => {
           </div>
           <ul className=" space-y-4 text-primary mt-12  z-50 font-bold text-base mb-5 pb-4 border-secodary border-b">
             {Categorylist?.map((list, index) => (
-              <li key={index}>{list}</li>
+              <li key={index}>
+                <Link to={`/category/${list}`} onClick={() => setSidebarOpen(false)}>
+                  {list}
+                </Link>
+              </li>
             ))}
           </ul>
           <Link

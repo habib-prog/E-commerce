@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useGetProductsByCategoryQuery } from "../API/apiSlice";
-import ProductCard from "../components/Ui/ProductCard";
+import ProductCard from "../Components/Ui/ProductCard";
 
 const Pagegallery = () => {
   const { slug } = useParams();
