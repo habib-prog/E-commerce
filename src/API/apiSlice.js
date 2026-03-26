@@ -59,6 +59,7 @@ export const {
   useGetAllProductsQuery,
   useGetProductByIdQuery,
   useLoginUserMutation,
+  useGetCurrentUserQuery,
   useLazyGetCurrentUserQuery,
   useAddToCartMutation,
 } = myApi;

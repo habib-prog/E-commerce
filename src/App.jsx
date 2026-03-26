@@ -8,6 +8,7 @@ import Cart from "./Pages/Cart";
 import AllProducts from "./Pages/AllProducts";
 import ProductDetails from "./Pages/ProductDetails";
 import Payment from "./Pages/Payment";
+import Profile from "./Pages/Profile";
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +21,7 @@ function App() {
           <Route path="category/:slug" element={<Pagegallery />} />
           <Route path="cart" element={<Cart />} />
           <Route path="payment" element={<Payment />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>

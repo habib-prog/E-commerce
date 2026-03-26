@@ -46,7 +46,7 @@ const Login = () => {
         }),
       );
 
-      navigate("/");
+      navigate("/profile");
     } catch (error) {
       setErrorMessage(error?.data?.message ?? "Login failed. Try again.");
     }

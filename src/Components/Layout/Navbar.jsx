@@ -68,9 +68,9 @@ const Navbar = () => {
                 <FaRegUser className="text-brand text-xl" />
                 <div className="max-[1024px]:hidden">
                   <p className="text-xs text-primary/70">Hello</p>
-                  <p className="text-sm font-bold text-primary">
+                  <Link to="/profile" className="text-sm font-bold text-primary hover:text-brand">
                     {user?.firstName ?? user?.username ?? "User"}
-                  </p>
+                  </Link>
                 </div>
                 <button
                   type="button"
@@ -187,9 +187,9 @@ const Navbar = () => {
           </ul>
           {isAuthenticated ? (
             <div className="space-y-3">
-              <p className="text-primary font-semibold">
+              <Link to="/profile" onClick={() => setSidebarOpen(false)} className="block text-primary font-semibold">
                 {user?.firstName ?? user?.username ?? "User"}
-              </p>
+              </Link>
               <button
                 type="button"
                 onClick={handleLogout}
