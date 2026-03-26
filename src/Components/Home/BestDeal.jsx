@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import {
   useAddToCartMutation,
@@ -22,6 +22,7 @@ const getOriginalPrice = (price, discountPercentage) =>
 const BestDeal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [addToCart] = useAddToCartMutation();
   const { data, isLoading, isError } = useGetProductsByCategoryQuery({
     category: "smartphones",
@@ -32,6 +33,11 @@ const BestDeal = () => {
   const products = data?.products ?? [];
 
   const handleAddCart = async (product) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
     dispatch(addItemToCart(product));
 
     try {

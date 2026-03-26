@@ -18,6 +18,27 @@ export const myApi = createApi({
     getProductById: builder.query({
       query: (id) => `products/${id}`,
     }),
+    loginUser: builder.mutation({
+      query: ({ username, password, expiresInMins = 30 }) => ({
+        url: "auth/login",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: {
+          username,
+          password,
+          expiresInMins,
+        },
+      }),
+    }),
+    getCurrentUser: builder.query({
+      query: (accessToken) => ({
+        url: "auth/me",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
     addToCart: builder.mutation({
       query: ({ userId = 1, products }) => ({
         url: "carts/add",
@@ -37,5 +58,7 @@ export const {
   useGetProductsByCategoryQuery,
   useGetAllProductsQuery,
   useGetProductByIdQuery,
+  useLoginUserMutation,
+  useLazyGetCurrentUserQuery,
   useAddToCartMutation,
 } = myApi;

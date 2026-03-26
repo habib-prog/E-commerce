@@ -1,6 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import {
+  useLazyGetCurrentUserQuery,
+  useLoginUserMutation,
+} from "../API/apiSlice";
+import { setCredentials } from "../Store/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const [getCurrentUser] = useLazyGetCurrentUserQuery();
+  const [formData, setFormData] = useState({
+    username: "emilys",
+    password: "emilyspass",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setErrorMessage("");
+
+    try {
+      const loginResponse = await loginUser({
+        username: formData.username,
+        password: formData.password,
+        expiresInMins: 30,
+      }).unwrap();
+
+      const currentUser = await getCurrentUser(loginResponse.accessToken).unwrap();
+
+      dispatch(
+        setCredentials({
+          user: currentUser,
+          accessToken: loginResponse.accessToken,
+        }),
+      );
+
+      navigate("/");
+    } catch (error) {
+      setErrorMessage(error?.data?.message ?? "Login failed. Try again.");
+    }
+  };
+
   return (
     <div className="sm:py-4 px-4 py-18">
       <div
@@ -19,21 +70,24 @@ const Login = () => {
         >
           Sign in to your account
         </p>
-        <form method="POST" action="#" className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
             <input
-              placeholder="john@example.com"
+              placeholder="Username"
               className="peer h-10 w-full border-b-2 border-gray-300 text-white bg-transparent placeholder-transparent focus:outline-none focus:border-white"
               required
-              id="email"
-              name="email"
-              type="email"
+              id="username"
+              name="username"
+              type="text"
+              autoComplete="username"
+              value={formData.username}
+              onChange={handleChange}
             />
             <label
               className="absolute left-0 -top-3.5 text-white text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-white peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sm"
-              htmlFor="email"
+              htmlFor="username"
             >
-              Email address
+              Username
             </label>
           </div>
           <div className="relative">
@@ -44,6 +98,9 @@ const Login = () => {
               id="password"
               name="password"
               type="password"
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleChange}
             />
             <label
               className="absolute left-0 -top-3.5 text-white text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-white peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sm"
@@ -64,11 +121,17 @@ const Login = () => {
               Forgot your password?
             </a>
           </div>
+          {errorMessage ? (
+            <p className="rounded-lg bg-red-100 px-3 py-2 text-sm text-red-600">
+              {errorMessage}
+            </p>
+          ) : null}
           <button
             className="w-full py-2 px-4 bg-brand hover:bg-blue-600 rounded-md shadow-lg text-white border-white border cursor-pointer font-semibold transition duration-200"
             type="submit"
+            disabled={isLoading}
           >
-            Log In
+            {isLoading ? "Logging In..." : "Log In"}
           </button>
         </form>
         <div className="text-center  text-gray-300">

@@ -45,7 +45,7 @@ const Banner = () => {
   return (
     <section className="container inline relative group:">
       <div className=" container hero-slider">
-        <Slider className="mt-12  md:mt-15 lg:mt-0" {...settings}>
+        <Slider className="mt-12  md:mt-12 lg:mt-0" {...settings}>
           <div>
             <img className="rounded-2xl " src="/star.png" alt="Banner" />
           </div>

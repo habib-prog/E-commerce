@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { useAddToCartMutation, useGetProductByIdQuery } from "../API/apiSlice";
 import { addItemToCart } from "../Store/cartSlice";
@@ -32,10 +32,11 @@ const ProductDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [addToCart] = useAddToCartMutation();
   const [quantity, setQuantity] = useState(1);
-  const [navMain, setNavMain] = useState(null);
-  const [navThumbs, setNavThumbs] = useState(null);
+  const [mainSlider, setMainSlider] = useState(null);
+  const [activeSlide, setActiveSlide] = useState(0);
   const { data: product, isLoading, isError } = useGetProductByIdQuery(id);
 
   if (isLoading) {
@@ -71,6 +72,11 @@ const ProductDetails = () => {
   const images = normalizeGalleryImages(product.images, product.thumbnail);
 
   const handleAddCart = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return false;
+    }
+
     const cartProduct = {
       id: product.id,
       title: product.title,
@@ -89,10 +95,17 @@ const ProductDetails = () => {
     } catch (error) {
       console.error("Add to cart failed", error);
     }
+
+    return true;
   };
 
   const handleBuyNow = async () => {
-    await handleAddCart();
+    const addedToCart = await handleAddCart();
+
+    if (!addedToCart) {
+      return;
+    }
+
     navigate("/payment");
   };
 
@@ -101,52 +114,39 @@ const ProductDetails = () => {
       <div className="rounded-[32px] bg-white/70 p-4 sm:p-6 lg:p-8">
         <div className="grid gap-5 lg:grid-cols-[110px_minmax(0,1fr)_420px] lg:gap-6">
           <div className="order-2 lg:order-1">
-            <Slider
-              asNavFor={navMain}
-              ref={(slider) => setNavThumbs(slider)}
-              slidesToShow={4}
-              swipeToSlide
-              focusOnSelect
-              vertical
-              arrows={false}
-              className="product-thumb-slider"
-              responsive={[
-                {
-                  breakpoint: 1024,
-                  settings: {
-                    vertical: false,
-                    slidesToShow: 4,
-                  },
-                },
-                {
-                  breakpoint: 640,
-                  settings: {
-                    vertical: false,
-                    slidesToShow: 4,
-                  },
-                },
-              ]}
-            >
-              {images.map((image, index) => (
-                <div key={`${image}-${index}`} className="px-1.5 py-1 sm:px-2">
-                  <div className="h-18 rounded-2xl border border-primary/15 bg-slate-100 p-2.5 sm:h-20 sm:p-3 lg:h-24">
+            <div className="grid grid-cols-4 gap-2 lg:grid-cols-1 lg:gap-3">
+              {images.slice(0, 4).map((image, index) => (
+                <button
+                  key={`${image}-${index}`}
+                  type="button"
+                  onClick={() => {
+                    setActiveSlide(index);
+                    mainSlider?.slickGoTo(index);
+                  }}
+                  className={`rounded-2xl border p-2.5 transition sm:p-3 ${
+                    activeSlide === index
+                      ? "border-brand bg-third"
+                      : "border-primary/15 bg-slate-100"
+                  }`}
+                >
+                  <div className="h-16 sm:h-20 lg:h-24">
                     <img
                       src={image}
                       alt={product.title}
                       className="h-full w-full object-contain"
                     />
                   </div>
-                </div>
+                </button>
               ))}
-            </Slider>
+            </div>
           </div>
 
           <div className="order-1 overflow-hidden rounded-[32px] border border-primary/15 bg-third p-4 sm:p-6 lg:order-2">
             <Slider
-              asNavFor={navThumbs}
-              ref={(slider) => setNavMain(slider)}
+              ref={(slider) => setMainSlider(slider)}
               arrows={false}
               fade
+              beforeChange={(_, nextSlide) => setActiveSlide(nextSlide)}
               className="product-main-slider"
             >
               {images.map((image, index) => (

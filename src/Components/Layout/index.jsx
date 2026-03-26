@@ -10,7 +10,7 @@ const Layout = () => {
         <Nav />
       </div>
 
-      <div className="pt-36">
+      <div className="pt-42">
         <Outlet />
       </div>
       <Footer />

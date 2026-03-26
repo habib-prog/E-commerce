@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import {
   useAddToCartMutation,
@@ -13,6 +13,7 @@ const Pagegallery = () => {
   const [maxPrice, setMaxPrice] = useState(2000);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [addToCart] = useAddToCartMutation();
 
   // Pagination
@@ -47,6 +48,11 @@ const Pagegallery = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleAddCart = async (product) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
     dispatch(addItemToCart(product));
 
     try {

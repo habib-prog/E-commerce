@@ -1,14 +1,17 @@
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { FaBars, FaRegUser } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { IoIosCloseCircle } from "react-icons/io";
 import { useGetProductsCategoryQuery } from "../../API/apiSlice";
+import { logoutUser } from "../../Store/authSlice";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [Sidebaropen, setSidebarOpen] = useState(false);
   const scrollRef = useRef(null);
   const scroll = (direction) => {
@@ -26,8 +29,21 @@ const Navbar = () => {
   const cartCount = useSelector((state) =>
     state.cart.items.reduce((total, item) => total + item.quantity, 0),
   );
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate("/");
+    setSidebarOpen(false);
+  };
   return (
     <header>
+      <div className="hidden bg-brand py-2 text-white md:block">
+        <div className="container flex items-center justify-between gap-4 text-sm">
+          <p>Call Us: +880 1234-567890</p>
+          <p>Order No: TRACK-ECOM-2026</p>
+        </div>
+      </div>
       <nav className="py-5">
         <div className="container flex justify-between items-center ">
           <button onClick={() => setSidebarOpen(true)} className="sm:hidden">
@@ -47,15 +63,34 @@ const Navbar = () => {
           </div>
           {/* Desktop Navigation Bar Ended */}
           <div className="auth md:ml-12 flex items-center gap-10">
-            <Link
-              to="/login"
-              className=" hidden md:flex   text-base items-center font-bold gap-1.5 text-primary relative after:absolute after:h-full after:w-0.5 after:bg-primary after:top-0 after:-right-5"
-            >
-              <FaRegUser className="text-brand text-xl" />
-              <span className="max-[1024px]:hidden inline">
-                Sign IN / Sign Up
-              </span>
-            </Link>
+            {isAuthenticated ? (
+              <div className="hidden md:flex items-center gap-3 text-primary relative after:absolute after:h-full after:w-0.5 after:bg-primary after:top-0 after:-right-5">
+                <FaRegUser className="text-brand text-xl" />
+                <div className="max-[1024px]:hidden">
+                  <p className="text-xs text-primary/70">Hello</p>
+                  <p className="text-sm font-bold text-primary">
+                    {user?.firstName ?? user?.username ?? "User"}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-lg border border-brand px-3 py-1 text-sm font-semibold text-brand"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className=" hidden md:flex   text-base items-center font-bold gap-1.5 text-primary relative after:absolute after:h-full after:w-0.5 after:bg-primary after:top-0 after:-right-5"
+              >
+                <FaRegUser className="text-brand text-xl" />
+                <span className="max-[1024px]:hidden inline">
+                  Sign IN / Sign Up
+                </span>
+              </Link>
+            )}
             <Link
               to="cart"
               className="flex md:mr-5 text-base items-center text-primary font-bold gap-1.5 relative"
@@ -150,13 +185,28 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
-          <Link
-            to="/login"
-            onClick={() => setSidebarOpen(false)}
-            className=" md:flex text-base items-center font-primary gap-1.5 text-primary "
-          >
-            Sign Up / Sign in
-          </Link>
+          {isAuthenticated ? (
+            <div className="space-y-3">
+              <p className="text-primary font-semibold">
+                {user?.firstName ?? user?.username ?? "User"}
+              </p>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-lg border border-brand px-4 py-2 text-sm font-semibold text-brand"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setSidebarOpen(false)}
+              className=" md:flex text-base items-center font-primary gap-1.5 text-primary "
+            >
+              Sign Up / Sign in
+            </Link>
+          )}
         </div>
       </div>
 

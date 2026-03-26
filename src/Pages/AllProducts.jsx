@@ -1,10 +1,7 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import {
-  useAddToCartMutation,
-  useGetAllProductsQuery,
-} from "../API/apiSlice";
+import { useAddToCartMutation, useGetAllProductsQuery } from "../API/apiSlice";
 import ProductCard from "../Components/Ui/ProductCard";
 import Header from "../Components/Ui/Header";
 import { addItemToCart } from "../Store/cartSlice";
@@ -22,6 +19,7 @@ const getOriginalPrice = (price, discountPercentage) =>
 const AllProducts = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [addToCart] = useAddToCartMutation();
   const { data, isLoading, isError } = useGetAllProductsQuery({
     limit: 30,
@@ -31,6 +29,11 @@ const AllProducts = () => {
   const products = data?.products ?? [];
 
   const handleAddCart = async (product) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
     dispatch(addItemToCart(product));
 
     try {
@@ -46,13 +49,15 @@ const AllProducts = () => {
   };
 
   return (
-    <section className="container py-8 sm:py-10">
-      <Header
-        heading={"All"}
-        spanText={"Products"}
-        moreRightText={`${products.length} Items`}
-        Linkto={"/products"}
-      />
+    <section className="container   py-8 sm:py-10">
+      <div className="mt-10">
+        <Header
+          heading={"All"}
+          spanText={"Products"}
+          moreRightText={`${products.length} Items`}
+          Linkto={"/products"}
+        />
+      </div>
 
       {isLoading ? (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
@@ -68,7 +73,7 @@ const AllProducts = () => {
           Products could not be loaded right now.
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
+        <div className="grid grid-cols-2 p-4 gap-4 md:grid-cols-3 xl:grid-cols-5">
           {products.map((product) => {
             const originalPrice = getOriginalPrice(
               product.price,
