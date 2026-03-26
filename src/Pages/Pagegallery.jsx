@@ -77,7 +77,7 @@ const Pagegallery = () => {
         {/* Header Section */}
         <div className="mb-8 flex flex-col justify-between gap-4 md:mb-12 md:flex-row md:items-end">
           <div>
-            <h2 className="mt-2 border-l-8 border-blue-600 pl-4 text-2xl font-black leading-none tracking-tighter uppercase sm:text-3xl md:text-5xl">
+            <h2 className="mt-12 sm:mt-8 border-l-8 border-blue-600 pl-4 text-2xl font-black leading-none tracking-tighter uppercase sm:text-3xl md:text-5xl">
               {slug.replace("-", " ")}
             </h2>
             {/* Showing X of Y Products*/}
