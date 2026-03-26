@@ -12,8 +12,30 @@ export const myApi = createApi({
       query: ({ category, limit = 10, skip = 0 }) =>
         `products/category/${category}?limit=${limit}&skip=${skip}`,
     }),
+    getAllProducts: builder.query({
+      query: ({ limit = 30, skip = 0 }) => `products?limit=${limit}&skip=${skip}`,
+    }),
+    getProductById: builder.query({
+      query: (id) => `products/${id}`,
+    }),
+    addToCart: builder.mutation({
+      query: ({ userId = 1, products }) => ({
+        url: "carts/add",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: {
+          userId,
+          products,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetProductsCategoryQuery, useGetProductsByCategoryQuery } =
-  myApi;
+export const {
+  useGetProductsCategoryQuery,
+  useGetProductsByCategoryQuery,
+  useGetAllProductsQuery,
+  useGetProductByIdQuery,
+  useAddToCartMutation,
+} = myApi;

@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { FaBars, FaRegUser } from "react-icons/fa";
@@ -22,6 +23,9 @@ const Navbar = () => {
     }
   };
   const { data: Categorylist } = useGetProductsCategoryQuery();
+  const cartCount = useSelector((state) =>
+    state.cart.items.reduce((total, item) => total + item.quantity, 0),
+  );
   return (
     <header>
       <nav className="py-5">
@@ -54,9 +58,14 @@ const Navbar = () => {
             </Link>
             <Link
               to="cart"
-              className="flex md:mr-5 text-base items-center text-primary font-bold gap-1.5"
+              className="flex md:mr-5 text-base items-center text-primary font-bold gap-1.5 relative"
             >
               <IoCartOutline className="text-brand  text-2xl" />
+              {cartCount > 0 ? (
+                <span className="absolute -top-2 left-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] text-white">
+                  {cartCount}
+                </span>
+              ) : null}
               <span className="hidden sm:block"> Cart</span>
             </Link>
           </div>

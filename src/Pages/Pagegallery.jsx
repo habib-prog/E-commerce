@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
-import { useGetProductsByCategoryQuery } from "../API/apiSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router";
+import {
+  useAddToCartMutation,
+  useGetProductsByCategoryQuery,
+} from "../API/apiSlice";
 import ProductCard from "../Components/Ui/ProductCard";
+import { addItemToCart } from "../Store/cartSlice";
 
 const Pagegallery = () => {
   const { slug } = useParams();
   const [maxPrice, setMaxPrice] = useState(2000);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [addToCart] = useAddToCartMutation();
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,17 +46,32 @@ const Pagegallery = () => {
   const totalItems = data?.total || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+  const handleAddCart = async (product) => {
+    dispatch(addItemToCart(product));
+
+    try {
+      await addToCart({
+        userId: 1,
+        products: [{ id: product.id, quantity: 1 }],
+      }).unwrap();
+    } catch (error) {
+      console.error("Add to cart failed", error);
+    }
+
+    navigate("/cart");
+  };
+
   // current range
   const showingFrom = skip + 1;
   const showingTo = Math.min(skip + (data?.products?.length || 0), totalItems);
 
   return (
-    <div className="bg-white min-h-screen">
-      <div className="container mx-auto py-6 md:py-10 px-4">
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-10 lg:px-4 lg:py-12">
         {/* Header Section */}
-        <div className="mb-8  md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="mb-8 flex flex-col justify-between gap-4 md:mb-12 md:flex-row md:items-end">
           <div>
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter border-l-8 border-blue-600 pl-4 mt-2 leading-none">
+            <h2 className="mt-2 border-l-8 border-blue-600 pl-4 text-2xl font-black leading-none tracking-tighter uppercase sm:text-3xl md:text-5xl">
               {slug.replace("-", " ")}
             </h2>
             {/* Showing X of Y Products*/}
@@ -62,11 +85,11 @@ const Pagegallery = () => {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
           {/*Price Filter  starts*/}
           <aside className="w-full lg:w-64 shrink-0">
-            <div className="lg:sticky lg:top-24 p-6 bg-gray-50 rounded-4xl border border-gray-100">
-              <div className="flex justify-between items-center mb-6">
+            <div className="rounded-[28px] border border-gray-100 bg-gray-50 p-4 sm:p-6 lg:sticky lg:top-24">
+              <div className="mb-6 flex items-center justify-between">
                 <h3 className="font-black text-xs uppercase tracking-widest text-gray-400">
                   Filter
                 </h3>
@@ -99,30 +122,34 @@ const Pagegallery = () => {
           >
             {filteredProducts?.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-4">
                   {filteredProducts.map((product) => (
                     <ProductCard
                       key={product.id}
+                      id={product.id}
                       image={product.thumbnail}
+                      price={product.price}
                       title={product.title}
                       currentPrice={`$${product.price}`}
                       OldPrice={`$${(product.price + 20).toFixed(2)}`}
                       save={`${product.discountPercentage}% OFF`}
                       btntext="Add"
+                      onAddCart={handleAddCart}
+                      to={`/products/${product.id}`}
                     />
                   ))}
                 </div>
 
                 {/* --- RESPONSIVE PAGINATION --- */}
-                <div className="mt-12 mb-2 flex flex-col items-center gap-6 border-t border-gray-100 pt-10">
-                  <div className="flex items-center gap-3">
+                <div className="mb-2 mt-10 flex flex-col items-center gap-5 border-t border-gray-100 pt-8 sm:mt-12 sm:gap-6 sm:pt-10">
+                  <div className="flex flex-wrap items-center justify-center gap-3">
                     <button
                       disabled={currentPage === 1}
                       onClick={() => {
                         setCurrentPage((prev) => prev - 1);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
-                      className="h-12 cursor-pointer px-6 rounded-2xl bg-brand text-white font-bold text-xs uppercase disabled:opacity-70   flex items-center"
+                      className="flex h-11 items-center rounded-2xl bg-brand px-5 text-xs font-bold uppercase text-white disabled:opacity-70 sm:h-12 sm:px-6"
                     >
                       Prev
                     </button>
@@ -158,7 +185,7 @@ const Pagegallery = () => {
                         setCurrentPage((prev) => prev + 1);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
-                      className="h-12 cursor-pointer px-6 rounded-2xl bg-brand text-white font-bold text-xs uppercase disabled:opacity-70   flex items-center"
+                      className="flex h-11 items-center rounded-2xl bg-brand px-5 text-xs font-bold uppercase text-white disabled:opacity-70 sm:h-12 sm:px-6"
                     >
                       Next
                     </button>
@@ -170,7 +197,7 @@ const Pagegallery = () => {
                 </div>
               </>
             ) : (
-              <div className="text-center py-32 bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-200 mx-2">
+              <div className="mx-1 rounded-[2rem] border-2 border-dashed border-gray-200 bg-gray-50 px-4 py-20 text-center sm:mx-2 sm:rounded-[3rem] sm:py-32">
                 <p className="text-gray-400 font-black uppercase text-xs tracking-widest">
                   No matches found for this budget
                 </p>
