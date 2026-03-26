@@ -33,7 +33,7 @@ const Cart = () => {
             Cart Items
           </h1>
         </div>
-        <div className="w-full rounded-2xl bg-third px-4 py-3 text-left sm:w-auto sm:px-5 sm:text-right">
+        <div className="w-full mt-10 text-center rounded-2xl bg-third px-4 py-3  sm:w-auto sm:px-5 ">
           <p className="text-sm text-primary">{totalQuantity} item(s)</p>
           <p className="text-lg font-bold text-brand">
             {formatPrice(totalPrice)}
