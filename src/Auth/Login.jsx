@@ -70,6 +70,12 @@ const Login = () => {
         >
           Sign in to your account
         </p>
+        <div className="rounded-xl border border-white/30 bg-white/15 px-4 py-3 text-sm text-white">
+          <p className="font-semibold">It's a demo pass</p>
+          <p className="mt-1 text-white/85">
+            Username: emilys | Password: emilyspass
+          </p>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
             <input
@@ -127,7 +133,7 @@ const Login = () => {
             </p>
           ) : null}
           <button
-            className="w-full py-2 px-4 bg-brand hover:bg-blue-600 rounded-md shadow-lg text-white border-white border cursor-pointer font-semibold transition duration-200"
+            className="w-full py-2 px-4 bg-brand hover:brightness-110 rounded-md shadow-lg text-white border-white border cursor-pointer font-semibold transition duration-200"
             type="submit"
             disabled={isLoading}
           >

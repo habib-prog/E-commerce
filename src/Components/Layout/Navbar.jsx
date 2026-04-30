@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { CiSearch } from "react-icons/ci";
@@ -6,13 +6,31 @@ import { FaBars, FaRegUser } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { IoIosCloseCircle } from "react-icons/io";
-import { useGetProductsCategoryQuery } from "../../API/apiSlice";
+import {
+  useGetAllProductsQuery,
+  useGetProductsCategoryQuery,
+} from "../../API/apiSlice";
 import { logoutUser } from "../../Store/authSlice";
+import { getSearchRelevanceScore, matchesSearchTerm } from "../../utils/search";
+
+const SEARCH_HISTORY_KEY = "ecommerce-search-history";
+const MAX_SEARCH_HISTORY = 8;
+
+const getStoredSearchHistory = () => {
+  try {
+    return JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY)) ?? [];
+  } catch {
+    return [];
+  }
+};
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [Sidebaropen, setSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [searchHistory, setSearchHistory] = useState(getStoredSearchHistory);
   const scrollRef = useRef(null);
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -26,6 +44,67 @@ const Navbar = () => {
     }
   };
   const { data: Categorylist } = useGetProductsCategoryQuery();
+  const { data: productsData } = useGetAllProductsQuery({
+    limit: 100,
+    skip: 0,
+  });
+  const products = useMemo(
+    () => productsData?.products ?? [],
+    [productsData?.products],
+  );
+  const searchSuggestions = useMemo(() => {
+    const query = searchTerm.trim();
+
+    if (!query) return [];
+
+    const productSuggestions = products
+      .filter((product) =>
+        matchesSearchTerm(query, [product.title, product.brand, product.category]),
+      )
+      .sort((firstProduct, secondProduct) => {
+        const firstScore = getSearchRelevanceScore(query, [
+          firstProduct.title,
+          firstProduct.brand,
+          firstProduct.category,
+        ]);
+        const secondScore = getSearchRelevanceScore(query, [
+          secondProduct.title,
+          secondProduct.brand,
+          secondProduct.category,
+        ]);
+
+        return secondScore - firstScore;
+      })
+      .map((product) => ({
+        id: `product-${product.id}`,
+        label: product.title,
+        meta: product.category?.replace("-", " ") ?? "Product",
+        value: product.title,
+      }));
+
+    const categorySuggestions = (Categorylist ?? [])
+      .filter((category) => matchesSearchTerm(query, [category]))
+      .sort(
+        (firstCategory, secondCategory) =>
+          getSearchRelevanceScore(query, [secondCategory]) -
+          getSearchRelevanceScore(query, [firstCategory]),
+      )
+      .map((category) => ({
+        id: `category-${category}`,
+        label: category.replace("-", " "),
+        meta: "Category",
+        value: category.replace("-", " "),
+      }));
+
+    const uniqueSuggestions = [...productSuggestions, ...categorySuggestions].filter(
+      (suggestion, index, suggestions) =>
+        suggestions.findIndex(
+          (item) => item.value.toLowerCase() === suggestion.value.toLowerCase(),
+        ) === index,
+    );
+
+    return uniqueSuggestions.slice(0, 6);
+  }, [Categorylist, products, searchTerm]);
   const cartCount = useSelector((state) =>
     state.cart.items.reduce((total, item) => total + item.quantity, 0),
   );
@@ -36,6 +115,127 @@ const Navbar = () => {
     navigate("/");
     setSidebarOpen(false);
   };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    const query = searchTerm.trim();
+
+    if (query) {
+      saveSearchHistory(query);
+      navigate(`/products?search=${encodeURIComponent(query)}`);
+      setSearchTerm("");
+      setIsSearchFocused(false);
+    } else {
+      navigate("/products");
+    }
+  };
+
+  const saveSearchHistory = (query) => {
+    const nextHistory = [
+      query,
+      ...searchHistory.filter(
+        (item) => item.toLowerCase() !== query.toLowerCase(),
+      ),
+    ].slice(0, MAX_SEARCH_HISTORY);
+
+    setSearchHistory(nextHistory);
+    localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(nextHistory));
+  };
+
+  const deleteSearchHistory = (query) => {
+    const nextHistory = searchHistory.filter((item) => item !== query);
+
+    setSearchHistory(nextHistory);
+    localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(nextHistory));
+  };
+
+  const runHistorySearch = (query) => {
+    saveSearchHistory(query);
+    navigate(`/products?search=${encodeURIComponent(query)}`);
+    setSearchTerm("");
+    setIsSearchFocused(false);
+  };
+
+  const runSuggestedSearch = (query) => {
+    saveSearchHistory(query);
+    navigate(`/products?search=${encodeURIComponent(query)}`);
+    setSearchTerm("");
+    setIsSearchFocused(false);
+  };
+
+  const searchSuggestionsDropdown =
+    isSearchFocused && searchTerm.trim() && searchSuggestions.length > 0 ? (
+      <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-2xl">
+        <div className="border-b border-primary/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-primary">
+          Suggestions
+        </div>
+        {searchSuggestions.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onMouseDown={(event) => {
+              event.preventDefault();
+              runSuggestedSearch(item.value);
+            }}
+            className="flex w-full items-center justify-between gap-3 border-b border-primary/5 px-3 py-2 text-left text-sm text-primary last:border-b-0 hover:bg-third"
+          >
+            <span className="truncate font-medium">{item.label}</span>
+            <span className="shrink-0 text-xs capitalize text-primary/60">
+              {item.meta}
+            </span>
+          </button>
+        ))}
+      </div>
+    ) : null;
+
+  const searchHistoryDropdown =
+    isSearchFocused && !searchTerm.trim() && searchHistory.length > 0 ? (
+      <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-2xl">
+        <div className="flex items-center justify-between border-b border-primary/10 px-3 py-2 text-xs font-bold uppercase tracking-widest text-primary">
+          <span>Recent Searches</span>
+          <button
+            type="button"
+            onMouseDown={(event) => {
+              event.preventDefault();
+              setSearchHistory([]);
+              localStorage.removeItem(SEARCH_HISTORY_KEY);
+            }}
+            className="text-brand"
+          >
+            Clear All
+          </button>
+        </div>
+        {searchHistory.map((item) => (
+          <div
+            key={item}
+            className="flex items-center border-b border-primary/5 last:border-b-0"
+          >
+            <button
+              type="button"
+              onMouseDown={(event) => {
+                event.preventDefault();
+                runHistorySearch(item);
+              }}
+              className="flex-1 px-3 py-2 text-left text-sm text-primary hover:bg-third"
+            >
+              {item}
+            </button>
+            <button
+              type="button"
+              onMouseDown={(event) => {
+                event.preventDefault();
+                deleteSearchHistory(item);
+              }}
+              className="px-3 py-2 text-lg text-primary hover:text-brand"
+              aria-label={`Delete ${item} from search history`}
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
+    ) : null;
+
   return (
     <header>
       <div className="hidden bg-brand py-2 text-white md:block">
@@ -53,14 +253,24 @@ const Navbar = () => {
             <img className="w-full" src="/logo.png" alt="logo" />
           </Link>
           {/* Desktop Navigation Bar Started */}
-          <div className="search hidden sm:flex items-center p-2 gap-2  rounded-lg bg-[#F3F9FB] w-full sm:ml-22   max-w-126.75">
+          <form
+            onSubmit={handleSearchSubmit}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setTimeout(() => setIsSearchFocused(false), 120)}
+            className="search relative hidden sm:flex items-center p-2 gap-2 rounded-lg bg-[#F3F9FB] w-full sm:ml-22 max-w-126.75"
+          >
             <CiSearch />
             <input
-              className="outline-none flex-1  "
-              type="text"
+              className="outline-none flex-1"
+              type="search"
+              autoComplete="off"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search essentials, groceries and more..."
             />
-          </div>
+            {searchSuggestionsDropdown}
+            {searchHistoryDropdown}
+          </form>
           {/* Desktop Navigation Bar Ended */}
           <div className="auth md:ml-12 flex items-center gap-10">
             {isAuthenticated ? (
@@ -108,14 +318,24 @@ const Navbar = () => {
 
         {/* Mobile search start */}
         <div className="container flex justify-center items-center sm:hidden">
-          <div className="search mt-4  flex items-center p-2 gap-2  rounded-lg bg-[#F3F9FB] w-full max-w-126.75">
+          <form
+            onSubmit={handleSearchSubmit}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setTimeout(() => setIsSearchFocused(false), 120)}
+            className="search relative mt-4 flex items-center p-2 gap-2 rounded-lg bg-[#F3F9FB] w-full max-w-126.75"
+          >
             <CiSearch />
             <input
-              className="outline-none flex-1  "
-              type="text"
+              className="outline-none flex-1"
+              type="search"
+              autoComplete="off"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search essentials, groceries and more..."
             />
-          </div>
+            {searchSuggestionsDropdown}
+            {searchHistoryDropdown}
+          </form>
         </div>
         {/* Mobile search end */}
       </nav>

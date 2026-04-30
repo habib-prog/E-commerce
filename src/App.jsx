@@ -9,9 +9,11 @@ import AllProducts from "./Pages/AllProducts";
 import ProductDetails from "./Pages/ProductDetails";
 import Payment from "./Pages/Payment";
 import Profile from "./Pages/Profile";
+import ScrollToTop from "./Components/Layout/ScrollToTop";
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />

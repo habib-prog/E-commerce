@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import {
@@ -7,10 +7,13 @@ import {
 } from "../API/apiSlice";
 import ProductCard from "../Components/Ui/ProductCard";
 import { addItemToCart } from "../Store/cartSlice";
+import { getSearchRelevanceScore, matchesSearchTerm } from "../utils/search";
 
 const Pagegallery = () => {
   const { slug } = useParams();
   const [maxPrice, setMaxPrice] = useState(2000);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("featured");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -25,6 +28,9 @@ const Pagegallery = () => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1);
+    setSearchTerm("");
+    setSortBy("featured");
+    setMaxPrice(2000);
   }, [slug]);
 
   const { data, isLoading, isFetching } = useGetProductsByCategoryQuery({
@@ -33,16 +39,50 @@ const Pagegallery = () => {
     skip: skip,
   });
 
+  const products = useMemo(() => data?.products ?? [], [data?.products]);
+  const filteredProducts = useMemo(() => {
+    const query = searchTerm.trim();
+
+    return products
+      .filter((product) => {
+        const searchableFields = [
+          product.title,
+          product.brand,
+        ];
+        const matchesSearch = matchesSearchTerm(query, searchableFields);
+
+        return matchesSearch && product.price <= maxPrice;
+      })
+      .sort((firstProduct, secondProduct) => {
+        if (query) {
+          const firstScore = getSearchRelevanceScore(query, [
+            firstProduct.title,
+            firstProduct.brand,
+          ]);
+          const secondScore = getSearchRelevanceScore(query, [
+            secondProduct.title,
+            secondProduct.brand,
+          ]);
+
+          if (firstScore !== secondScore) return secondScore - firstScore;
+        }
+
+        if (sortBy === "price-low") return firstProduct.price - secondProduct.price;
+        if (sortBy === "price-high") return secondProduct.price - firstProduct.price;
+        if (sortBy === "rating") return secondProduct.rating - firstProduct.rating;
+        if (sortBy === "discount") {
+          return secondProduct.discountPercentage - firstProduct.discountPercentage;
+        }
+        return 0;
+      });
+  }, [maxPrice, products, searchTerm, sortBy]);
+
   if (isLoading)
     return (
       <div className="flex text-4xl justify-center items-center h-64 text-gray-400 font-bold animate-pulse">
         LOADING...
       </div>
     );
-
-  const filteredProducts = data?.products?.filter(
-    (product) => product.price <= maxPrice,
-  );
 
   const totalItems = data?.total || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -77,7 +117,7 @@ const Pagegallery = () => {
         {/* Header Section */}
         <div className="mb-8 flex flex-col justify-between gap-4 md:mb-12 md:flex-row md:items-end">
           <div>
-            <h2 className="mt-12 sm:mt-8 border-l-8 border-blue-600 pl-4 text-2xl font-black leading-none tracking-tighter uppercase sm:text-3xl md:text-5xl">
+            <h2 className="mt-12 sm:mt-8 border-l-8 border-brand pl-4 text-2xl font-black leading-none tracking-tighter uppercase sm:text-3xl md:text-5xl">
               {slug.replace("-", " ")}
             </h2>
             {/* Showing X of Y Products*/}
@@ -95,11 +135,22 @@ const Pagegallery = () => {
           {/*Price Filter  starts*/}
           <aside className="w-full lg:w-64 shrink-0">
             <div className="rounded-[28px] border border-gray-100 bg-gray-50 p-4 sm:p-6 lg:sticky lg:top-24">
+              <label className="mb-5 flex flex-col gap-2 text-xs font-black uppercase tracking-widest text-gray-400">
+                Search
+                <input
+                  type="search"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder="Search in category..."
+                  className="h-11 rounded-xl border border-gray-200 bg-white px-3 text-sm font-medium normal-case tracking-normal text-gray-700 outline-none focus:border-brand"
+                />
+              </label>
+
               <div className="mb-6 flex items-center justify-between">
                 <h3 className="font-black text-xs uppercase tracking-widest text-gray-400">
-                  Filter
+                  Max Price
                 </h3>
-                <span className="text-blue-600 font-black text-xl">
+                <span className="text-brand font-black text-xl">
                   ${maxPrice}
                 </span>
               </div>
@@ -111,13 +162,40 @@ const Pagegallery = () => {
                 step="50"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
-                className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand"
               />
 
               <div className="flex justify-between text-[10px] text-gray-400 font-bold uppercase mt-2">
                 <span>$0</span>
                 <span>$2000</span>
               </div>
+
+              <label className="mt-5 flex flex-col gap-2 text-xs font-black uppercase tracking-widest text-gray-400">
+                Sort
+                <select
+                  value={sortBy}
+                  onChange={(event) => setSortBy(event.target.value)}
+                  className="h-11 rounded-xl border border-gray-200 bg-white px-3 text-sm font-medium normal-case tracking-normal text-gray-700 outline-none focus:border-brand"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Top Rated</option>
+                  <option value="discount">Best Discount</option>
+                </select>
+              </label>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTerm("");
+                  setMaxPrice(2000);
+                  setSortBy("featured");
+                }}
+                className="mt-5 h-11 w-full rounded-xl border border-brand text-sm font-black uppercase text-brand transition hover:bg-brand hover:text-white"
+              >
+                Clear Filters
+              </button>
             </div>
           </aside>
           {/*Price Filter  Ends*/}
@@ -171,7 +249,7 @@ const Pagegallery = () => {
                           }}
                           className={`w-12 h-12 cursor-pointer rounded-2xl font-black text-xs transition-all ${
                             currentPage === index + 1
-                              ? "bg-blue-600 text-white shadow-xl shadow-blue-100"
+                              ? "bg-brand text-white shadow-xl shadow-violet-100"
                               : "bg-gray-50 text-gray-400 hover:bg-gray-200"
                           }`}
                         >

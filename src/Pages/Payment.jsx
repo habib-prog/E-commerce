@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -9,7 +9,56 @@ const formatPrice = (price) =>
     maximumFractionDigits: 0,
   }).format(price * 83);
 
+const paymentMethods = [
+  {
+    id: "card",
+    name: "Card",
+    type: "card",
+    color: "bg-brand",
+    textColor: "text-brand",
+    borderColor: "border-brand",
+    logo: "",
+  },
+  {
+    id: "bkash",
+    name: "bKash",
+    type: "mobile",
+    color: "bg-[#e2136e]",
+    textColor: "text-[#e2136e]",
+    borderColor: "border-[#e2136e]",
+    logo: "/bkash-logo.svg",
+  },
+  {
+    id: "nagad",
+    name: "Nagad",
+    type: "mobile",
+    color: "bg-[#f58220]",
+    textColor: "text-[#f58220]",
+    borderColor: "border-[#f58220]",
+    logo: "/nagad-logo.svg",
+  },
+  {
+    id: "rocket",
+    name: "Rocket",
+    type: "mobile",
+    color: "bg-[#8b1f7a]",
+    textColor: "text-[#8b1f7a]",
+    borderColor: "border-[#8b1f7a]",
+    logo: "/rocket-logo.svg",
+  },
+  {
+    id: "upay",
+    name: "Upay",
+    type: "mobile",
+    color: "bg-[#00a651]",
+    textColor: "text-[#00a651]",
+    borderColor: "border-[#00a651]",
+    logo: "/upay-logo.svg",
+  },
+];
+
 const Payment = () => {
+  const [selectedMethod, setSelectedMethod] = useState(paymentMethods[0]);
   const cartItems = useSelector((state) => state.cart.items);
   const totalQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -32,27 +81,84 @@ const Payment = () => {
               Payment Details
             </h1>
 
+            <div className="mt-8">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">
+                Select Payment Method
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                {paymentMethods.map((method) => {
+                  const isSelected = selectedMethod.id === method.id;
+
+                  return (
+                    <button
+                      key={method.id}
+                      type="button"
+                      onClick={() => setSelectedMethod(method)}
+                      className={`rounded-2xl border-2 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:shadow-lg ${
+                        isSelected
+                          ? `${method.borderColor} shadow-lg`
+                          : "border-primary/10"
+                      }`}
+                    >
+                      <span
+                        className={`flex h-14 items-center justify-center rounded-xl px-3 ${
+                          method.logo ? "bg-slate-50" : method.color
+                        }`}
+                      >
+                        {method.logo ? (
+                          <img
+                            src={method.logo}
+                            alt={`${method.name} logo`}
+                            className="h-10 max-w-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-lg font-black uppercase text-white">
+                            Card
+                          </span>
+                        )}
+                      </span>
+                      <span
+                        className={`mt-3 block text-xs font-bold uppercase tracking-widest ${
+                          isSelected ? method.textColor : "text-primary"
+                        }`}
+                      >
+                        {isSelected ? "Selected" : "Click to Pay"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <input
-                type="text"
-                placeholder="Cardholder Name"
-                className="rounded-2xl border border-primary/15 px-4 py-3 outline-none"
+                type={selectedMethod.type === "mobile" ? "tel" : "text"}
+                placeholder={
+                  selectedMethod.type === "mobile"
+                    ? `${selectedMethod.name} Account Number`
+                    : "Cardholder Name"
+                }
+                className={`rounded-2xl border px-4 py-3 outline-none sm:col-span-2 ${selectedMethod.borderColor}`}
               />
-              <input
-                type="text"
-                placeholder="Card Number"
-                className="rounded-2xl border border-primary/15 px-4 py-3 outline-none"
-              />
-              <input
-                type="text"
-                placeholder="MM/YY"
-                className="rounded-2xl border border-primary/15 px-4 py-3 outline-none"
-              />
-              <input
-                type="text"
-                placeholder="CVV"
-                className="rounded-2xl border border-primary/15 px-4 py-3 outline-none"
-              />
+              {selectedMethod.type === "card" ? (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Card Number"
+                    className="rounded-2xl border border-primary/15 px-4 py-3 outline-none"
+                  />
+                  <input
+                    type="text"
+                    placeholder="MM/YY"
+                    className="rounded-2xl border border-primary/15 px-4 py-3 outline-none"
+                  />
+                  <input
+                    type="text"
+                    placeholder="CVV"
+                    className="rounded-2xl border border-primary/15 px-4 py-3 outline-none"
+                  />
+                </>
+              ) : null}
               <input
                 type="text"
                 placeholder="Billing Address"
@@ -64,7 +170,7 @@ const Payment = () => {
               type="button"
               className="mt-8 w-full rounded-2xl bg-brand px-5 py-3 font-semibold text-white"
             >
-              Confirm Payment
+              Pay with {selectedMethod.name}
             </button>
           </div>
 

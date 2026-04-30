@@ -2,6 +2,8 @@ import React from "react";
 import { FaWhatsapp, FaPhoneAlt } from "react-icons/fa"; // Run: npm install react-icons
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="bg-brand  text-white py-12 px-6 md:px-20 font-sans">
       <div className="container mx-auto  grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -128,7 +130,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="border-t border-white/20 mt-12 pt-6 text-center text-sm">
-        <p>© 2022 All rights reserved. Reliance Retail Ltd.</p>
+        <p>© {currentYear} All rights reserved. Reliance Retail Ltd.</p>
       </div>
     </footer>
   );
